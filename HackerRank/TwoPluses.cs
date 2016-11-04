@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+
 class Solution
 {
     /// <summary>
     /// Challenge: https://www.hackerrank.com/challenges/two-pluses
     /// </summary>
     /// <param name="args"></param>
-    static void Main(String[] args)
+    static void Main2(String[] args)
     {
         // 1. Read input
         bool[,] board = ReadBoard();
