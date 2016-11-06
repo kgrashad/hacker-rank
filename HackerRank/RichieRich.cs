@@ -9,7 +9,7 @@ namespace HackerRank
         /// Challenge: https://www.hackerrank.com/challenges/richie-rich
         /// </summary>
         /// <param name="args"></param>
-        static void Main(String[] args)
+        static void Main2(String[] args)
         {
             // 1. Read input.
             int k;
@@ -58,24 +58,24 @@ namespace HackerRank
 
         static void Fix(Digit[] digits, int k)
         {
-            int cost = 0;
+            // In the first path we make the digits palindromes
             for (int i = 0; i < digits.Length; i++)
             {
-                cost += digits[i].Symmetrize();
+                k -= digits[i].Symmetrize();
             }
 
-            int budget = k - cost;
+            // In the second path, we maximize the value according to remaining budget
             for (int i = 0; i < digits.Length; i++)
             {
-                budget -= digits[i].Maximize(budget);
+                k -= digits[i].Maximize(k);
             }
         }
 
         static void Print(Digit[] digits)
         {
-            var left = digits.Select(d => d.LeftValue).ToArray();
+            var left = digits.Select(d => d.LeftValue);
             var skip = digits.Last().Middle ? 1 : 0;
-            var right = digits.Reverse().Skip(skip).Select(d => d.LeftValue).ToArray();
+            var right = digits.Reverse().Skip(skip).Select(d => d.LeftValue);
             Console.WriteLine(string.Join("", left.Concat(right)));
         }
 
@@ -85,11 +85,11 @@ namespace HackerRank
 
             public char RightValue { get; set; }
 
+            public bool Symmetric => this.RightValue == this.LeftValue;
+
             public bool Changed { get; set; }
 
             public bool Middle { get; set; }
-
-            public bool Symmetric => this.LeftValue == this.RightValue;
 
             public int Symmetrize()
             {
@@ -108,9 +108,8 @@ namespace HackerRank
                 if (this.LeftValue == '9') return 0;
 
                 // If we changed a character, we already paid 1 unit of cost
-                // If this is the middle char, then we already need 1 unit of cost.
-                int requiredCost = this.Changed || this.Middle ? 1 : 0;
-                int cost =  2 - requiredCost;
+                // If this is the middle char, then we just need 1 unit of cost.
+                int cost =  2 - (this.Changed || this.Middle ? 1 : 0);
 
                 if (cost > budget) return 0;
 
